@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.min.js"></script>
+    <script src="./js/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        class MyComponent extends React.Component {
+            constructor(props) {
+                super(props);
+                // 在构造函数中绑定（ES2015）
+                this.handleClickOne = this.handleClickOne.bind(this);
+                this.handleClickFive = this.handleClickFive.bind(this);
+                this.state = {
+                
+                };
+            }
+
+            componentDidMount() {
+                
+            }
+            // 在构造函数中绑定（ES2015）
+            handleClickOne() {
+                console.log('handleClickOne');
+            }
+            // 使用箭头函数
+            handleClickTwo = () => {
+                console.log('handleClickTwo');
+            }
+            //Function.prototype.bind每次组件渲染时，在渲染中使用都会创建一个新函数，这可能会影响性能
+            handleClickThree(){
+                console.log('handleClickThree');
+            }
+            handleClickFour(name) {
+                console.log('Click happened',name);
+            }
+            handleClickFive(e){
+                // e.persist()
+                console.log(e.target.dataset.id,'////')
+            }
+            handleClickSix=(e)=>{
+                e.persist()
+                console.log(e,'////')
+            }
+
+            render() {
+                
+                return (
+                    <div>
+                        <button onClick={this.handleClickOne}>handleClickOne</button>
+                        <button onClick={this.handleClickTwo}>handleClickTwo</button>
+                        <button onClick={this.handleClickThree.bind(this)}>handleClickThree</button>
+                        // 在渲染中使用箭头函数会在每次渲染时创建一个新函数，这可能会影响性能
+                        <button onClick={() => this.handleClickFour(121212)}>handleClickFour</button>
+
+                        // 参数传递
+                        <button data-id='2' onClick={this.handleClickFive}>handleClickFive</button>
+                        // 参数传递
+                        <button data-id='5' onClick={this.handleClickSix}>handleClickSix</button>
+                    </div>
+                );
+            }
+        }
+        ReactDOM.render(
+            <MyComponent/>,
+            document.getElementById('root')
+        );
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+    <script src="./js/babel.min.js"></script>
+    <script src="./js/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        class MyComponent extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                error: null,
+                isLoaded: false,
+                items: []
+                };
+            }
+
+            componentDidMount() {
+                const that = this,xhr = new XMLHttpRequest(); // IE8/9需用window.XDomainRequest兼容
+
+                // 前端设置是否带cookie
+                xhr.withCredentials = false;
+
+                xhr.open('get', 'http://localhost:9999/file', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send(null);
+                xhr.onreadystatechange = function() {
+                    // console.log(xhr.readyState,xhr)
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        console.log(JSON)
+                        // alert(xhr.responseText);
+                        that.setState({
+                            isLoaded: true,
+                            items:JSON.parse(xhr.responseText).data
+                        });
+                        return
+                    }
+                    else if(xhr.status != 200){
+                        that.setState({
+                            isLoaded: true,
+                            error:xhr.responseText
+                        });
+                    }
+                };
+            }
+
+            render() {
+                const { error, isLoaded, items } = this.state;
+                if (error) {
+                return <div>Error: {error.message}</div>;
+                } else if (!isLoaded) {
+                return <div>Loading...</div>;
+                } else {
+                return (
+                    <ul>
+                    {items.map(item => (
+                        <li key={item.id} style={{display:'flex',alignItems:'center',textDecoration: 'none'}}>
+                        <img src={item.link} style={{width:100}}/>
+                        <p>{item.name} </p>
+                        </li>
+                    ))}
+                    </ul>
+                );
+                }
+            }
+        }
+        ReactDOM.render(
+            <MyComponent/>,
+            document.getElementById('root')
+        );
+    </script>
+</body>
+
+</html>
